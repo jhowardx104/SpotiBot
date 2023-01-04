@@ -9,7 +9,7 @@ public static class SpotifyApiDIExtensions
     {
         if (_currentLogin is not null && !_currentLogin.IsExpired)
         {
-
+            
         }
         return services;
     }
