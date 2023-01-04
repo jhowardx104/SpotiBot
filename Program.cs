@@ -2,16 +2,17 @@
 using SpotiBot.Spotify;
 using SpotiBot.Spotify.Services;
 using Microsoft.Extensions.Configuration;
+using SpotiBot.Common.DependencyInjection;
 namespace SpotiBot;
 
 public static class Program
 {
-    private static IServiceCollection services;
+    private static IServiceCollection _services;
 
     public static void Main(string[] args)
     {
-        services = GetServiceCollection();
-        App.Run(services.BuildServiceProvider());
+        _services = GetServiceCollection();
+        App.Run(_services.BuildServiceProvider());
     }
 
     private static IServiceCollection GetServiceCollection()
@@ -27,6 +28,13 @@ public static class Program
         configBuilder.AddJsonFile("appsettings.json");
         services.AddScoped<IShowService, ShowService>();
         services.AddScoped<SpotifyApiClient>();
+        services.AddSpotifyApiClient();
+    }
+
+    private static string Inject()
+    {
+
+        return "";
     }
 }
 
