@@ -28,7 +28,10 @@ public static class Program
         configBuilder.AddJsonFile("appsettings.json");
         services.AddScoped<IShowService, ShowService>();
         services.AddScoped<SpotifyApiClient>();
+        services.AddHttpClient();
         services.AddSpotifyApiClient();
+
+        services.AddMemoryCache();
     }
 
     private static string Inject()
