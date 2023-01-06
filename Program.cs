@@ -26,18 +26,13 @@ public static class Program
     {
         IConfigurationBuilder configBuilder = new ConfigurationBuilder();
         configBuilder.AddJsonFile("appsettings.json");
+        configBuilder.AddJsonFile("./secrets/spotify.json");
+        var config = configBuilder.Build();
         services.AddScoped<IShowService, ShowService>();
         services.AddScoped<SpotifyApiClient>();
         services.AddHttpClient();
-        services.AddSpotifyApiClient();
-
+        services.AddSpotifyApiClient(config);
         services.AddMemoryCache();
-    }
-
-    private static string Inject()
-    {
-
-        return "";
     }
 }
 

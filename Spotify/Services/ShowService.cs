@@ -11,6 +11,10 @@ public class ShowService: IShowService
     }
     public async Task<IEnumerable<Show>> GetAllAsync()
     {
+        var result = await _client.GetAsync("/search?q=Dungeons&type=show");
+        var stringResult = await result.Content.ReadAsStringAsync();
+        Console.WriteLine(stringResult);
+        
         return new List<Show>(){
             new(){
                 Name = "Test Show"

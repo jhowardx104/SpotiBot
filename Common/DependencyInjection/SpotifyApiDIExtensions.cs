@@ -13,9 +13,19 @@ public static class SpotifyApiDIExtensions
     public static IServiceCollection AddSpotifyApiClient(this IServiceCollection services, IConfiguration config)
     {
         services.AddTransient<OAuthDelegatingHandler>();
-        
-        services.AddHttpClient<IAuthenticationService, SpotifyApiAuthenticationService>().ConfigureHttpClient(c => c.BaseAddress = new Uri(""));
-        services.AddHttpClient("SpotifyApiHttpClient", c => c.BaseAddress = new Uri("")).AddHttpMessageHandler(provider => {
+
+        var authUrl = config.GetRequiredSection("Spotify:AuthUrl").Value;
+
+        services.AddHttpClient("SpotifyAuthApiClient").ConfigureHttpClient(c => c.BaseAddress = new Uri(authUrl));
+        services.AddScoped(provider => {
+            var factory = provider.GetRequiredService<IHttpClientFactory>();
+            var client = factory.CreateClient("SpotifyAuthApiClient");
+            return new SpotifyApiAuthenticationService(provider.GetRequiredService<IMemoryCache>(), client);
+        });
+
+        var baseUrl = config.GetRequiredSection("Spotify:BaseUrl").Value;
+
+        services.AddHttpClient("SpotifyApiHttpClient", c => c.BaseAddress = new Uri(baseUrl)).AddHttpMessageHandler(provider => {
             return new OAuthDelegatingHandler(provider.GetRequiredService<SpotifyApiAuthenticationService>());
         });
 

@@ -18,7 +18,7 @@ public class SpotifyApiAuthenticationService : IAuthenticationService
         DateTimeOffset expirationDateTime;
         if(!_memoryCache.TryGetValue<string>("Spotify Auth Token", out var token))
         {
-            var response = await _httpClient.PostAsync("", null);
+            var response = await _httpClient.PostAsync("/token", null);
             var authToken = JsonConvert.DeserializeObject<SpotifyAuthToken>(await response.Content.ReadAsStringAsync());
             token = authToken?.AccessToken;
             if(authToken is not null && authToken.ExpiresIn > 0 && authToken.AccessToken.Length > 0)
